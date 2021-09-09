@@ -1,7 +1,9 @@
 ﻿using NUnit.Framework;
 using nunit3x.Factory;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -17,6 +19,11 @@ namespace nunit3x.Suite
         /// </summary>
         public abstract TFactory Factory { get; }
         INxSuiteFactory INxTestSuite.Factory => this.Factory;
+
+        /// <summary>
+        /// Gets the <see cref="IConcurrentProperty"/> collection for this <see cref="INxTestSuite"/>
+        /// </summary>
+        public abstract IImmutableDictionary<Guid, IConcurrentProperty> ConcurrentProperties { get; }
 
         /// <summary>
         /// Asynchronous one time setup method called before any tests are executed for the current suite.
@@ -39,6 +46,12 @@ namespace nunit3x.Suite
         /// Test case teardown method called after each individual test case.
         /// </summary>
         protected virtual void OnTestCaseTeardown() => Expression.Empty();
+
+        /// <summary>
+        /// Retrieves default property values for concurrent properties
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IEnumerable<IConcurrentProperty> GetConcurrentPropertyDefaults();
     }
 
     public abstract class NxTestSuite<TFactory, TSuite> : NxTestSuite<TFactory>
@@ -49,7 +62,7 @@ namespace nunit3x.Suite
 
         public NxTestSuite()
         {
-            if (!(this is TSuite)) 
+            if (!(this is TSuite))
             {
                 throw new ArgumentException($"Suite '{ this.GetType() }' must be an instance of '{ typeof(TSuite) }' in order to be used");
             }
@@ -59,12 +72,47 @@ namespace nunit3x.Suite
 
         #endregion
 
+        #region Fields
+
+        private const string NUNIT_DEFAULTMETHODNAME = "AdhocTestMethod";
+        private readonly ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>> _properties = new ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>>();
+
+        #endregion
+
         #region Properties
 
         /// <summary>
         /// Gets the <see cref="TFactory"/>
         /// </summary>
         public override TFactory Factory { get; }
+
+        public override IImmutableDictionary<Guid, IConcurrentProperty> ConcurrentProperties
+        {
+            get
+            {
+                string testContext = TestContext.CurrentContext.Test.ID;
+
+                if (string.IsNullOrWhiteSpace(TestContext.CurrentContext.Test.MethodName) ||
+                    TestContext.CurrentContext.Test.MethodName.Equals(NUNIT_DEFAULTMETHODNAME))
+                {
+                    testContext = $"Nx-{ testContext }";
+                }
+
+                if (!_properties.ContainsKey(testContext))
+                {
+                    IEnumerable<IConcurrentProperty> defaultProperties = this.GetConcurrentPropertyDefaults();
+
+                    if (defaultProperties.GroupBy(i => i.Key).Any(i => i.Count() > 1))
+                    {
+                        throw new Exception($"Property keys for concurrent properties may be used by one and only one concurrent property");
+                    }
+
+                    _properties.TryAdd(testContext, this.GetConcurrentPropertyDefaults());
+                }
+
+                return _properties[testContext].ToImmutableDictionary(i => i.Key, i => i);
+            }
+        }
 
         #endregion
 
