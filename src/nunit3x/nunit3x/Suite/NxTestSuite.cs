@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using nunit3x.Factory;
 using System;
 using System.Collections.Concurrent;
@@ -52,6 +53,8 @@ namespace nunit3x.Suite
         /// </summary>
         /// <returns></returns>
         protected abstract IEnumerable<IConcurrentProperty> GetConcurrentPropertyDefaults();
+
+        public abstract Mock<TType> LazyMock<TType>(int key = 0) where TType : class;
     }
 
     public abstract class NxTestSuite<TFactory, TSuite> : NxTestSuite<TFactory>
@@ -75,6 +78,9 @@ namespace nunit3x.Suite
         #region Fields
 
         private const string NUNIT_DEFAULTMETHODNAME = "AdhocTestMethod";
+
+        private static Guid LAZYMOCKS_KEY = Guid.NewGuid();
+
         private readonly ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>> _properties = new ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>>();
 
         #endregion
@@ -100,18 +106,23 @@ namespace nunit3x.Suite
 
                 if (!_properties.ContainsKey(testContext))
                 {
-                    IEnumerable<IConcurrentProperty> defaultProperties = this.GetConcurrentPropertyDefaults();
+                    IEnumerable<IConcurrentProperty> defaultProperties = this.GetConcurrentPropertyDefaults().Union(this.GetInternalConcurrentPropertyDefaults());
 
                     if (defaultProperties.GroupBy(i => i.Key).Any(i => i.Count() > 1))
                     {
                         throw new Exception($"Property keys for concurrent properties may be used by one and only one concurrent property");
                     }
 
-                    _properties.TryAdd(testContext, this.GetConcurrentPropertyDefaults());
+                    _properties.TryAdd(testContext, defaultProperties);
                 }
 
                 return _properties[testContext].ToImmutableDictionary(i => i.Key, i => i);
             }
+        }
+
+        internal Dictionary<Type, Dictionary<int, Mock>> LazyMocks
+        {
+            get => this.ConcurrentProperties[LAZYMOCKS_KEY].GetValue<Dictionary<Type, Dictionary<int, Mock>>>();
         }
 
         #endregion
@@ -152,6 +163,29 @@ namespace nunit3x.Suite
         protected async Task OneTimeTeardownAsync()
         {
             await this.OnOneTimeTeardownAsync().ConfigureAwait(false);
+        }
+
+        public override Mock<TType> LazyMock<TType>(int key = 0)
+        {
+            if (!this.LazyMocks.ContainsKey(typeof(TType)))
+            {
+                this.LazyMocks.Add(typeof(TType), new Dictionary<int, Mock>()
+                {
+                    { 0, new Mock<TType>() }
+                });
+            }
+
+            if (!this.LazyMocks[typeof(TType)].ContainsKey(key))
+            {
+                this.LazyMocks[typeof(TType)].Add(key, new Mock<TType>());
+            }
+
+            return (Mock<TType>)this.LazyMocks[typeof(TType)][key];
+        }
+
+        internal IEnumerable<IConcurrentProperty> GetInternalConcurrentPropertyDefaults()
+        {
+            yield return new ConcurrentProperty<Dictionary<Type, Dictionary<int, Mock>>>(LAZYMOCKS_KEY, new Dictionary<Type, Dictionary<int, Mock>>());
         }
 
         #endregion
