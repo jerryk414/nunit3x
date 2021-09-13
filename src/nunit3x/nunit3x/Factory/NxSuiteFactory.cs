@@ -1,11 +1,11 @@
-﻿using nunit3x.Suite;
+﻿using NUnit3x.Suite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nunit3x.Factory
+namespace NUnit3x.Factory
 {
     public abstract class NxSuiteFactory<TSuite> : INxSuiteFactory<TSuite>
         where TSuite: class, INxTestSuite

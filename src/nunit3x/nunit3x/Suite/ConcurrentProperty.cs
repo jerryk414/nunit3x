@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nunit3x.Suite
+namespace NUnit3x.Suite
 {
     public interface IConcurrentProperty
     {
@@ -22,16 +22,15 @@ namespace nunit3x.Suite
         /// <summary>
         /// Gets the actual value for this property
         /// </summary>
-        TType GetValue<TType>() where TType : class;
+        TType GetValue<TType>();
 
         /// <summary>
         /// Sets the actual value for this property
         /// </summary>
-        void SetValue<TType>(TType value) where TType : class;
+        void SetValue<TType>(TType value);
     }
 
     public sealed class ConcurrentProperty<TType> : IConcurrentProperty
-        where TType: class
     {
         #region Construction
 
@@ -39,6 +38,8 @@ namespace nunit3x.Suite
         {
             this.Key = key;
             this.Default = @default;
+
+            _value = @default;
         }
 
         #endregion
@@ -71,28 +72,26 @@ namespace nunit3x.Suite
         /// Gets the actual value for this property
         /// </summary>
         public TValueType GetValue<TValueType>()
-            where TValueType : class
         {
             if (typeof(TValueType) != typeof(TType))
             {
                 throw new Exception($"Concurrent property '{ this.Key }' type '{ typeof(TType) }' does not match requested type '{ typeof(TValueType) }'");
             }
 
-            return _value as TValueType;
+            return (TValueType)((object)_value);
         }
 
         /// <summary>
         /// Gets the actual value for this property
         /// </summary>
         public void SetValue<TValueType>(TValueType value)
-            where TValueType : class
         {
             if (typeof(TValueType) != typeof(TType))
             {
                 throw new Exception($"Concurrent property '{ this.Key }' type '{ typeof(TType) }' does not match requested type '{ typeof(TValueType) }'");
             }
 
-            _value = value as TType;
+            _value = (TType)((object)value);
         }
 
         #endregion
