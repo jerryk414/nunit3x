@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit3x", "nunit3x\NUnit3x.csproj", "{65587B52-7882-47AF-9791-A579D9B98FAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit3x", "NUnit3x\NUnit3x.csproj", "{65587B52-7882-47AF-9791-A579D9B98FAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit3x.Tests", "NUnit3x.Tests\NUnit3x.Tests.csproj", "{F9FB085E-428B-4B78-83F3-8FE745594091}"
 EndProject

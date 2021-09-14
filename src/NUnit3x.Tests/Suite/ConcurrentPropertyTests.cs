@@ -69,8 +69,6 @@ namespace NUnit3x.Tests.Suite
 
             this.ConcurrentProperty = testCase;
 
-            Thread.Sleep(new Random().Next(0, 20));
-
             Assert.That(this.ConcurrentProperty, Is.EqualTo(testCase));
         }
 

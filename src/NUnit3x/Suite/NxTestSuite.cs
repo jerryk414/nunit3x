@@ -81,7 +81,7 @@ namespace NUnit3x.Suite
 
         private static Guid LAZYMOCKS_KEY = Guid.NewGuid();
 
-        private readonly ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>> _properties = new ConcurrentDictionary<string, IEnumerable<IConcurrentProperty>>();
+        private readonly ConcurrentDictionary<string, IImmutableDictionary<Guid, IConcurrentProperty>> _properties = new ConcurrentDictionary<string, IImmutableDictionary<Guid, IConcurrentProperty>>();
 
         #endregion
 
@@ -113,10 +113,10 @@ namespace NUnit3x.Suite
                         throw new Exception($"Property keys for concurrent properties may be used by one and only one concurrent property");
                     }
 
-                    _properties.TryAdd(testContext, defaultProperties);
+                    _properties.TryAdd(testContext, defaultProperties.ToImmutableDictionary(i => i.Key, i => i));
                 }
 
-                return _properties[testContext].ToImmutableDictionary(i => i.Key, i => i);
+                return _properties[testContext];
             }
         }
 
