@@ -43,5 +43,5 @@ jobs:
         run: |
           echo "SemVer: $GITVERSION_SEMVER"
       - name: Nuget Pack
-        run: dotnet pack src/NUnit3x.sln --include-symbols --no-build --configuration Release /p:Version=${GITVERSION_SEMVER} --output
+        run: dotnet pack src/NUnit3x.sln --include-symbols --no-build --configuration Release /p:Version=${GITVERSION_SEMVER} --output ./
       
