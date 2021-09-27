@@ -38,14 +38,14 @@ jobs:
       - name: Use GitVersion
         uses: gittools/actions/gitversion/execute@v0.9.7
         id: gitversion
+        with:
+          useConfigFile: true
       - name: Display Version
         run: |
           echo "SemVer: ${{steps.gitversion.outputs.semVer}}"
       - name: Nuget Pack
-        run: dotnet pack src/NUnit3x.sln --include-symbols --configuration Release /p:Version=${{steps.gitversion.outputs.semVer}} --output ./
+        run: dotnet pack src/NUnit3x.sln --include-symbols --configuration Release /p:SymbolPackageFormat=snupkg /p:Version=${{steps.gitversion.outputs.semVer}} --output ./
       - name: Nuget Push
         run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.nupkg --api-key ${{secrets.NUGET_ORG_TOKEN}} --source nuget
-      - name: Nuget Push Symbols
-        run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.symbols.nupkg --api-key ${{secrets.NUGET_ORG_TOKEN}} --source nuget
         
       
