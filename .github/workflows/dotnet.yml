@@ -44,8 +44,8 @@ jobs:
       - name: Nuget Pack
         run: dotnet pack src/NUnit3x.sln --include-symbols --configuration Release /p:Version=${{steps.gitversion.outputs.semVer}} --output ./
       - name: Nuget Push
-        run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.nupkg --api-key ${NUGET_ORG_TOKEN} --source nuget
+        run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.nupkg --source nuget --api-key ${NUGET_ORG_TOKEN}
       - name: Nuget Push Symbols
-        run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.symbols.nupkg --api-key ${NUGET_ORG_TOKEN} --source nuget
+        run: dotnet nuget push ./NUnit3x.${{steps.gitversion.outputs.semVer}}.symbols.nupkg --source nuget --api-key ${NUGET_ORG_TOKEN}
         
       
