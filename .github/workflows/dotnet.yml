@@ -44,4 +44,9 @@ jobs:
           echo "SemVer: $GITVERSION_SEMVER"
       - name: Nuget Pack
         run: dotnet pack src/NUnit3x.sln --include-symbols --no-build --configuration Release /p:Version=${GITVERSION_SEMVER} --output ./
+      - name: Nuget Push
+        run: dotnet nuget push NUnit3x.${GITVERSION_SEMVER}.nupkg --api-key ${NUGET_ORG_TOKEN} -s https://api.nuget.org/v3/index.json
+      - name: Nuget Push Symbols
+        run: dotnet nuget push NUnit3x.${GITVERSION_SEMVER}.symbols.nupkg --api-key ${NUGET_ORG_TOKEN} -s https://api.nuget.org/v3/index.json
+        
       
