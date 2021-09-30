@@ -21,7 +21,7 @@ namespace NUnit3x
         {
             try
             {
-                this.SetName(this.HandleTestName($"{{m}} { RenameParameters(args) }"));
+                this.SetName(this.HandleTestName($"{{m}}{ RenameParameters(args) }"));
             }
             catch
             {
@@ -54,6 +54,8 @@ namespace NUnit3x
             }
         }
 
+        public new NxTestCaseData Returns(object obj) => (NxTestCaseData)base.Returns(obj);
+
         private string RenameParameters(params object[] args)
         {
             StringBuilder result = new StringBuilder();
@@ -62,17 +64,22 @@ namespace NUnit3x
             if (args == null)
                 result.Append("null");
 
+            StringBuilder parameters = new StringBuilder();
             foreach (object obj in args)
             {
-                result.Append(RenameParameter(obj));
+                parameters.Append(RenameParameter(obj));
 
                 // Is this the last parameter?
                 if (Array.IndexOf(args, obj) < (args.Length - 1))
                 {
-                    result.Append(", ");
+                    parameters.Append(", ");
                 }
             }
 
+            // The NUnitTestAdapter cannot handle inner parenthesis - just use curly braces instead
+            parameters = parameters.Replace("(", "{").Replace(")", "}");
+
+            result.Append(parameters);
             result.Append(")");
 
             return result.ToString();

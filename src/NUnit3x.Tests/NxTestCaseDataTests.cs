@@ -56,5 +56,18 @@ namespace NUnit3x.Tests
             // Assert
             Assert.That(result.Select(i => i.Arguments), Is.EquivalentTo(expected));
         }
+
+        [Test]
+        public void Returns()
+        {
+            // Arrange
+            NxTestCaseData data = new NxTestCaseData();
+
+            // Act
+            NxTestCaseData result = data.Returns(true);
+
+            // Assert
+            Assert.That(data, Is.EqualTo(result));
+        }
     }
 }
