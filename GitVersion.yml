@@ -4,7 +4,6 @@ assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{InformationalVersion}'
 mode: ContinuousDeployment
 increment: Inherit
-continuous-delivery-fallback-tag: ci
 tag-prefix: '[vV]'
 major-version-bump-message: '\+semver:\s?(breaking|major)'
 minor-version-bump-message: '\+semver:\s?(feature|minor)'
@@ -19,3 +18,10 @@ ignore:
   sha: []
   commits-before: 2021-09-27T12:45:00
 merge-message-formats: {}
+branches:
+  main:
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    tracks-release-branches: false
