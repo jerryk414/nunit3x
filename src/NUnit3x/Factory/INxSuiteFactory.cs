@@ -16,7 +16,7 @@ namespace NUnit3x.Factory
     }
 
     public interface INxSuiteFactory<TSuite> : INxSuiteFactory
-        where TSuite : class, INxTestSuite
+        where TSuite : INxTestSuite
     {
         /// <summary>
         /// Gets the <see cref="TSuite"/>
