@@ -1,9 +1,8 @@
-next-version: 2.1.0
+next-version: 3.0.0
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{InformationalVersion}'
-mode: ContinuousDeployment
-continuous-delivery-fallback-tag: ''
+mode: Mainline
 increment: Inherit
 tag-prefix: '[vV]'
 major-version-bump-message: '\+semver:\s?(breaking|major)'
