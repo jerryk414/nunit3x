@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NUnit3x.Factory
 {
     public abstract class NxSuiteFactory<TSuite> : INxSuiteFactory<TSuite>
-        where TSuite: class, INxTestSuite
+        where TSuite: INxTestSuite
     {
         #region Construction
 

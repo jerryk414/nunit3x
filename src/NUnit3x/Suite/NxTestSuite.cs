@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace NUnit3x.Suite
 {
     public abstract class NxTestSuite<TFactory> : INxTestSuite<TFactory>
-        where TFactory : class, INxSuiteFactory
+        where TFactory : INxSuiteFactory
     {
         /// <summary>
         /// Gets the <see cref="TFactory"/>
@@ -52,14 +52,17 @@ namespace NUnit3x.Suite
         /// Retrieves default property values for concurrent properties
         /// </summary>
         /// <returns></returns>
-        protected abstract IEnumerable<IConcurrentProperty> GetConcurrentPropertyDefaults();
+        protected virtual IEnumerable<IConcurrentProperty> GetConcurrentPropertyDefaults()
+        {
+            yield break;
+        }
 
         public abstract Mock<TType> LazyMock<TType>(int key = 0) where TType : class;
     }
 
     public abstract class NxTestSuite<TFactory, TSuite> : NxTestSuite<TFactory>
-        where TFactory : NxSuiteFactory<TSuite>
-        where TSuite : class, INxTestSuite
+        where TFactory : INxSuiteFactory
+        where TSuite : INxTestSuite
     {
         #region Construction
 
@@ -183,7 +186,7 @@ namespace NUnit3x.Suite
             return (Mock<TType>)this.LazyMocks[typeof(TType)][key];
         }
 
-        internal IEnumerable<IConcurrentProperty> GetInternalConcurrentPropertyDefaults()
+        internal virtual IEnumerable<IConcurrentProperty> GetInternalConcurrentPropertyDefaults()
         {
             yield return new ConcurrentProperty<Dictionary<Type, Dictionary<int, Mock>>>(LAZYMOCKS_KEY, new Dictionary<Type, Dictionary<int, Mock>>());
         }
