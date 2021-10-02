@@ -20,20 +20,20 @@ namespace NUnit3x.DependencyInjection
         /// for the test suite.
         /// </summary>
         /// <param name="type"></param>
-        /// <exception cref="ArgumentNullException">Thrown if <see cref="Type"/> is null</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <see cref="ServiceType"/> is null</exception>
         public RequiresDependencyAttribute(Type type, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
-            Type = type ?? throw new ArgumentNullException("Type must not be null");
-            ServiceLifetime = serviceLifetime;
+            ServiceType = type ?? throw new ArgumentNullException("Type must not be null");
+            Lifetime = serviceLifetime;
         }
 
         #endregion
 
         #region Properties
 
-        public Type Type { get; }
+        public Type ServiceType { get; }
 
-        public ServiceLifetime ServiceLifetime { get; }
+        public ServiceLifetime Lifetime { get; }
 
         #endregion
     }
