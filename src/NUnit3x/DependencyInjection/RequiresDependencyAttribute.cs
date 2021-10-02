@@ -36,5 +36,22 @@ namespace NUnit3x.DependencyInjection
         public ServiceLifetime Lifetime { get; }
 
         #endregion
+
+        #region Methods
+
+        public override bool Equals(object obj)
+        {
+            return obj != null &&
+                obj is RequiresDependencyAttribute second &&
+                second.ServiceType == this.ServiceType &&
+                second.Lifetime == this.Lifetime;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.ServiceType, this.Lifetime);
+        }
+
+        #endregion
     }
 }

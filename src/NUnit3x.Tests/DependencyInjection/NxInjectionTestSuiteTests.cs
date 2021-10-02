@@ -12,13 +12,6 @@ using System.Threading.Tasks;
 
 namespace NUnit3x.Tests.DependencyInjection
 {
-    class NxInjectionSuiteFactory : NxSuiteFactory<INxInjectionTestSuite>
-    {
-        public NxInjectionSuiteFactory(INxInjectionTestSuite suite) : base(suite)
-        {
-        }
-    }
-
     [TestOf(typeof(INxInjectionTestSuite))]
     class NxInjectionTestSuiteTests : NxInjectionTestSuite<NxInjectionSuiteFactory, NxInjectionTestSuiteTests>
     {
