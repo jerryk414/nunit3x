@@ -4,6 +4,7 @@ assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{InformationalVersion}'
 increment: Inherit
 tag-prefix: '[vV]'
+mode: Mainline
 major-version-bump-message: '\+semver:\s?(breaking|major)'
 minor-version-bump-message: '\+semver:\s?(feature|minor)'
 patch-version-bump-message: '\+semver:\s?(fix|patch)'
@@ -21,5 +22,4 @@ branches:
   main:
     tag: ''
     increment: Patch
-    mode: Mainline
     regex: ^main
