@@ -2,7 +2,6 @@ next-version: 3.1.0
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{InformationalVersion}'
-mode: Mainline
 increment: Inherit
 tag-prefix: '[vV]'
 major-version-bump-message: '\+semver:\s?(breaking|major)'
@@ -22,3 +21,5 @@ branches:
   main:
     tag: ''
     increment: Patch
+    mode: Mainline
+    regex: ^main
