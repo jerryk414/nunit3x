@@ -10,7 +10,7 @@ namespace NUnit3x.DependencyInjection
     /// <summary>
     /// When using <see cref=""/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class RequiresDependencyAttribute : Attribute
     {
         #region Construction
