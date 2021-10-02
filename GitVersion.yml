@@ -1,4 +1,4 @@
-next-version: 3.1.0
+next-version: 4.0.0
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
 assembly-informational-format: '{InformationalVersion}'
@@ -16,7 +16,7 @@ commit-message-incrementing: Enabled
 commit-date-format: 'yyyy-MM-dd'
 ignore:
   sha: []
-  commits-before: 2021-09-27T12:45:00
+  commits-before: 2021-10-02T09:09:00
 merge-message-formats: {}
 branches:
   main:
