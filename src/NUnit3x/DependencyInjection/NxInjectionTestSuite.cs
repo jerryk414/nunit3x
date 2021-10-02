@@ -74,13 +74,17 @@ namespace NUnit3x.DependencyInjection
             ServiceCollection collection = new ServiceCollection();
             foreach (ServiceDescriptor rootDependency in GetRoot())
             {
+                Log.Write($"Adding root dependency of type '{ rootDependency.ServiceType }' ('{ rootDependency.Lifetime }')");
+
                 collection.Add(rootDependency);
             }
 
             Type baseType = typeof(Mock<>);
             foreach (RequiresDependencyAttribute attrib in GetDependents())
             {
-                Type type = baseType.MakeGenericType(attrib.Type);
+                Log.Write($"Adding required dependency of type '{ attrib.ServiceType }' ('{ attrib.Lifetime }')");
+
+                Type type = baseType.MakeGenericType(attrib.ServiceType);
                 Mock dependency = (Mock)Activator.CreateInstance(type);
 
                 this.LazyMocks.Add(type, new Dictionary<int, Mock>()
@@ -88,22 +92,22 @@ namespace NUnit3x.DependencyInjection
                     { 0, dependency }
                 });
 
-                switch (attrib.ServiceLifetime)
+                switch (attrib.Lifetime)
                 {
                     case ServiceLifetime.Singleton:
                         collection.AddSingleton(type, dependency);
-                        collection.AddSingleton(attrib.Type, dependency.Object);
+                        collection.AddSingleton(attrib.ServiceType, dependency.Object);
                         break;
                     case ServiceLifetime.Scoped:
                         collection.AddScoped(type, i => dependency);
-                        collection.AddScoped(attrib.Type, i => dependency.Object);
+                        collection.AddScoped(attrib.ServiceType, i => dependency.Object);
                         break;
                     case ServiceLifetime.Transient:
                         collection.AddTransient(type, i => dependency);
-                        collection.AddTransient(attrib.Type, i => dependency.Object);
+                        collection.AddTransient(attrib.ServiceType, i => dependency.Object);
                         break;
                     default:
-                        throw new ArgumentException($"Invalid lifetime '{ attrib.ServiceLifetime }' specified for type '{ attrib.Type }'registered using { typeof(RequiresDependencyAttribute)}");
+                        throw new ArgumentException($"Invalid lifetime '{ attrib.Lifetime }' specified for type '{ attrib.ServiceType }'registered using { typeof(RequiresDependencyAttribute)}");
                 }
             }
 
@@ -138,7 +142,7 @@ namespace NUnit3x.DependencyInjection
                 {
                     if (_dependents == null)
                     {
-                        _dependents = this.GetType().GetCustomAttributes<RequiresDependencyAttribute>();
+                        _dependents = this.GetType().GetCustomAttributes<RequiresDependencyAttribute>(true);
                     }
                 }
             }
