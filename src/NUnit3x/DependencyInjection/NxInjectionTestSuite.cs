@@ -90,7 +90,7 @@ namespace NUnit3x.DependencyInjection
                 Type type = baseType.MakeGenericType(attrib.ServiceType);
                 Mock dependency = (Mock)Activator.CreateInstance(type);
 
-                this.LazyMocks.Add(type, new Dictionary<int, Mock>()
+                this.LazyMocks.Add(attrib.ServiceType, new Dictionary<int, Mock>()
                 {
                     { 0, dependency }
                 });
