@@ -61,7 +61,10 @@ namespace NUnit3x.DependencyInjection
         /// Adds the application services to the given <see cref="IServiceCollection"/>
         /// </summary>
         /// <param name="coll"></param>
-        protected abstract void AddServices(IServiceCollection coll);
+        protected virtual void AddServices(IServiceCollection coll)
+        {
+
+        }
 
         protected override void OnTestCaseSetup()
         {
@@ -87,7 +90,7 @@ namespace NUnit3x.DependencyInjection
                 Type type = baseType.MakeGenericType(attrib.ServiceType);
                 Mock dependency = (Mock)Activator.CreateInstance(type);
 
-                this.LazyMocks.Add(type, new Dictionary<int, Mock>()
+                this.LazyMocks.Add(attrib.ServiceType, new Dictionary<int, Mock>()
                 {
                     { 0, dependency }
                 });
@@ -115,7 +118,7 @@ namespace NUnit3x.DependencyInjection
             this.Provider = collection.BuildServiceProvider();
         }
 
-        private IServiceCollection GetRoot()
+        internal IServiceCollection GetRoot()
         {
             if (_root == null)
             {
@@ -134,7 +137,7 @@ namespace NUnit3x.DependencyInjection
             return _root;
         }
 
-        private IEnumerable<RequiresDependencyAttribute> GetDependents()
+        internal IEnumerable<RequiresDependencyAttribute> GetDependents()
         {
             if (_dependents == null)
             {
