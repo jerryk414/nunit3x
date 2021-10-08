@@ -62,9 +62,7 @@ namespace NUnit3x.DependencyInjection
         /// </summary>
         /// <param name="coll"></param>
         protected virtual void AddServices(IServiceCollection coll)
-        {
-
-        }
+        { }
 
         protected override void OnTestCaseSetup()
         {
@@ -77,7 +75,7 @@ namespace NUnit3x.DependencyInjection
             ServiceCollection collection = new ServiceCollection();
             foreach (ServiceDescriptor rootDependency in GetRoot())
             {
-                Log.Write($"Adding root dependency of type '{ rootDependency.ServiceType }' ('{ rootDependency.Lifetime }')");
+                this.Log($"Adding root dependency of type '{ rootDependency.ServiceType }' ('{ rootDependency.Lifetime }')");
 
                 collection.Add(rootDependency);
             }
@@ -85,7 +83,7 @@ namespace NUnit3x.DependencyInjection
             Type baseType = typeof(Mock<>);
             foreach (RequiresDependencyAttribute attrib in GetDependents())
             {
-                Log.Write($"Adding required dependency of type '{ attrib.ServiceType }' ('{ attrib.Lifetime }')");
+                this.Log($"Adding required dependency of type '{ attrib.ServiceType }' ('{ attrib.Lifetime }')");
 
                 Type type = baseType.MakeGenericType(attrib.ServiceType);
                 Mock dependency = (Mock)Activator.CreateInstance(type);
