@@ -26,6 +26,8 @@ namespace NUnit3x.Suite
         /// </summary>
         public abstract IImmutableDictionary<Guid, IConcurrentProperty> ConcurrentProperties { get; }
 
+        public virtual bool LoggingEnabled => true;
+
         /// <summary>
         /// Asynchronous one time setup method called before any tests are executed for the current suite.
         /// </summary>
@@ -58,6 +60,12 @@ namespace NUnit3x.Suite
         }
 
         public abstract Mock<TType> LazyMock<TType>(int key = 0) where TType : class;
+
+        public void Log(string message)
+        {
+            if (this.LoggingEnabled)
+                Console.WriteLine($"[{ DateTime.Now.ToLongTimeString() }] { message }");
+        }
     }
 
     public abstract class NxTestSuite<TFactory, TSuite> : NxTestSuite<TFactory>

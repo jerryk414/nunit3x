@@ -11,6 +11,11 @@ namespace NUnit3x.Suite
 {
     public interface INxTestSuite
     {
+        /// <summary>
+        /// Determines whether logging is enabled (<see cref="true"/> by default)
+        /// </summary>
+        bool LoggingEnabled { get; }
+
         INxSuiteFactory Factory { get; }
 
         IImmutableDictionary<Guid, IConcurrentProperty> ConcurrentProperties { get; }
@@ -22,6 +27,12 @@ namespace NUnit3x.Suite
         /// <param name="index">Specify the key of the mock to retrieve to allow for multiple instances of the same type to be used in the same test case</param>
         /// <returns>The singleton instance of <see cref="Mock{TType}"/> for the current test case</returns>
         Mock<TType> LazyMock<TType>(int key = 0) where TType: class;
+
+        /// <summary>
+        /// Logs the given <paramref name="message"/> to the console
+        /// </summary>
+        /// <param name="message"></param>
+        void Log(string message);
     }
 
     public interface INxTestSuite<TFactory> : INxTestSuite
