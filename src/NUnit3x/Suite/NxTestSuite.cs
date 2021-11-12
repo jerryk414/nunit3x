@@ -115,8 +115,12 @@ namespace NUnit3x.Suite
                     testContext = $"Nx-{ testContext }";
                 }
 
+                this.Log($"Test context found: '{ testContext }'");
+
                 if (!_properties.ContainsKey(testContext))
                 {
+                    this.Log($"Adding default properties for '{ testContext }'");
+
                     IEnumerable<IConcurrentProperty> defaultProperties = this.GetConcurrentPropertyDefaults().Union(this.GetInternalConcurrentPropertyDefaults());
 
                     if (defaultProperties.GroupBy(i => i.Key).Any(i => i.Count() > 1))

@@ -87,7 +87,7 @@ namespace NUnit3x
 
         private string RenameParameter(object obj)
         {
-            string result = obj.ToString();
+            string result;
 
             if (obj == null)
             {
@@ -102,6 +102,8 @@ namespace NUnit3x
             }
             else
             {
+                result = obj.ToString();
+
                 if (IsMock(obj))
                 {
                     if (result.Contains("Mock<"))

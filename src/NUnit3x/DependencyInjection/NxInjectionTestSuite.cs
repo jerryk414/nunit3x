@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 namespace NUnit3x.DependencyInjection
 {
     public abstract class NxInjectionTestSuite<TFactory, TSuite> : NxTestSuite<TFactory, TSuite>, INxInjectionTestSuite
-        where TFactory: INxSuiteFactory
-        where TSuite: INxInjectionTestSuite
+        where TFactory : INxSuiteFactory
+        where TSuite : INxInjectionTestSuite
     {
         #region Fields
 
@@ -84,6 +84,12 @@ namespace NUnit3x.DependencyInjection
             foreach (RequiresDependencyAttribute attrib in GetDependents())
             {
                 this.Log($"Adding required dependency of type '{ attrib.ServiceType }' ('{ attrib.Lifetime }')");
+
+                if (this.LazyMocks.ContainsKey(attrib.ServiceType))
+                {
+                    this.Log($"Type '{ attrib.ServiceType }' already registered");
+                    continue;
+                }
 
                 Type type = baseType.MakeGenericType(attrib.ServiceType);
                 Mock dependency = (Mock)Activator.CreateInstance(type);
