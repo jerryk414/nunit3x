@@ -20,7 +20,6 @@ namespace NUnit3x.DependencyInjection
 
         private readonly object _lock = new object();
 
-        private IServiceCollection _root;
         private IEnumerable<RequiresDependencyAttribute> _dependents;
 
         #endregion
@@ -124,21 +123,10 @@ namespace NUnit3x.DependencyInjection
 
         internal IServiceCollection GetRoot()
         {
-            if (_root == null)
-            {
-                lock (_lock)
-                {
-                    if (_root == null)
-                    {
-                        ServiceCollection coll = new ServiceCollection();
-                        this.AddServices(coll);
+            ServiceCollection coll = new ServiceCollection();
+            this.AddServices(coll);
 
-                        _root = coll;
-                    }
-                }
-            }
-
-            return _root;
+            return coll;
         }
 
         internal IEnumerable<RequiresDependencyAttribute> GetDependents()
