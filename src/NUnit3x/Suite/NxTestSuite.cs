@@ -59,7 +59,8 @@ namespace NUnit3x.Suite
             yield break;
         }
 
-        public abstract Mock<TType> LazyMock<TType>(int key = 0) where TType : class;
+        public abstract Mock<TType> LazyMock<TType>() where TType : class;
+        public abstract Mock<TType> LazyMock<TType>(int key) where TType : class;
 
         public void Log(string message)
         {
@@ -180,7 +181,9 @@ namespace NUnit3x.Suite
             await this.OnOneTimeTeardownAsync().ConfigureAwait(false);
         }
 
-        public override Mock<TType> LazyMock<TType>(int key = 0)
+        public override Mock<TType> LazyMock<TType>() => this.LazyMock<TType>(0);
+
+        public override Mock<TType> LazyMock<TType>(int key)
         {
             if (!this.LazyMocks.ContainsKey(typeof(TType)))
             {

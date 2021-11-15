@@ -21,12 +21,19 @@ namespace NUnit3x.Suite
         IImmutableDictionary<Guid, IConcurrentProperty> ConcurrentProperties { get; }
 
         /// <summary>
+        /// Lazily creates or retrieves the default singleton instance of <see cref="Mock{TType}"/>
+        /// </summary>
+        /// <typeparam name="TType"></typeparam>
+        /// <returns>The singleton instance of <see cref="Mock{TType}"/> for the current test case</returns>
+        Mock<TType> LazyMock<TType>() where TType : class;
+
+        /// <summary>
         /// Lazily creates or retrieves a singleton instance of <see cref="Mock{TType}"/>
         /// </summary>
         /// <typeparam name="TType"></typeparam>
-        /// <param name="index">Specify the key of the mock to retrieve to allow for multiple instances of the same type to be used in the same test case</param>
+        /// <param name="key">Specify the key of the mock to retrieve to allow for multiple instances of the same type to be used in the same test case</param>
         /// <returns>The singleton instance of <see cref="Mock{TType}"/> for the current test case</returns>
-        Mock<TType> LazyMock<TType>(int key = 0) where TType: class;
+        Mock<TType> LazyMock<TType>(int key) where TType: class;
 
         /// <summary>
         /// Logs the given <paramref name="message"/> to the console
