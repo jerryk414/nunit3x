@@ -53,6 +53,15 @@ namespace NUnit3x.DependencyInjection
             }
         }
 
+        /// <summary>
+        /// Determines if root dependencies added in <see cref="AddServices(IServiceCollection)"/> should be cached for each test case
+        /// </summary>
+        /// <remarks>
+        /// A use case for this is if the implementation for <see cref="AddServices(IServiceCollection)"/> is different depending on 
+        /// the current test case being executed
+        /// </remarks>
+        protected virtual bool CacheRootDependencies { get; } = true;
+
         #endregion
 
         #region Methods
@@ -124,6 +133,14 @@ namespace NUnit3x.DependencyInjection
 
         internal IServiceCollection GetRoot()
         {
+            if (!this.CacheRootDependencies)
+            {
+                ServiceCollection coll = new ServiceCollection();
+                this.AddServices(coll);
+
+                return coll;
+            }
+            
             if (_root == null)
             {
                 lock (_lock)
