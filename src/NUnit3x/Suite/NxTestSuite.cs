@@ -65,7 +65,7 @@ namespace NUnit3x.Suite
         public void Log(string message)
         {
             if (this.LoggingEnabled)
-                Console.WriteLine($"[{ DateTime.Now.ToLongTimeString() }] { message }");
+                Console.WriteLine($"[{ DateTime.Now.ToString("MM:dd:yyyy hh:mm:ss.fff tt") }] { message }");
         }
     }
 
